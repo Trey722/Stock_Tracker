@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import StockPriceComponent from './getStockInfo';
 import OptionsChainComponent from './getOptionInfo';
+import RiskFreeComponent from './getRiskFreeRate';
+import OptionsProfitAtEachPrice from './calcOptions';
 
 
 
@@ -37,6 +39,39 @@ function parseCommandDates(command) {
     return null; 
 }
 
+function executeCalcCommand(command) {
+  let newCommand = parseCalcOptions(command);
+  const { buying, ticker, start, end, step } = newCommand;
+
+  return (
+      <OptionsProfitAtEachPrice
+          buying={buying}
+          ticker={ticker}
+          startPrice={start}
+          endPrice={end}
+          step={step}
+      />
+  );
+}
+
+function parseCalcOptions(command) {
+  console.log("The parsers was called");
+  const regex = /--([^']+) --([^']+) ([^']+) ([^']+) ([^']+) ([^']+)/;
+  const match = command.match(regex);
+
+  if (match) {
+      const command = match[1];
+      const buying = match[2];
+      const ticker = match[3];
+      const start = match[4];
+      const end = match[5];
+      const step = match[6]; // Changed the index from 56 to 6
+
+      return { buying, ticker, start, end, step };
+  }
+  return null;
+}
+
 function excuteGetRequest(command)
 {
     if (command['type'].includes("STOCK"))
@@ -53,7 +88,14 @@ function excuteGetRequest(command)
 
     else if (command['type'].includes("ECON"))
     {
-      
+      if(command['target'].includes("risk_free_rate"))
+      {
+        return <RiskFreeComponent />
+      }
+
+      else {
+        return failedToRead(command);
+      }
     }
 
     else {
@@ -97,6 +139,7 @@ const Terminal = () => {
   const processInput = (command) => {
     let outputContent;
     let parsaedCommand
+
   
     parsaedCommand = parseCommand(command);
     
