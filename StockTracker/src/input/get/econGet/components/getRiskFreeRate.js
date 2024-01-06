@@ -19,6 +19,7 @@ async function getriskfreerate() {
 }
 
 function RiskFreeComponent() {
+    console.log("Risk free component called")
     const [rate, setRate] = useState(null);
 
     useEffect(() => {

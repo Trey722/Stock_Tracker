@@ -1,10 +1,4 @@
 import React, { useState, useRef } from 'react';
-import StockPriceComponent from './COMP/stockComp/getStockInfo';
-import OptionsChainComponent from './input/get/optionGet/components/getOptionInfo';
-import RiskFreeComponent from './input/get/econGet/components/getRiskFreeRate';
-import OptionsProfitAtEachPrice from './COMP/optionComp/calcOptions';
-import getGreeks from './input/get/optionGet/components/getOptionGreeks';
-import StockGreeksComponent from './input/get/optionGet/components/getOptionGreeks';
 import procceseCommands from "./input/paraseCommands"
 
 

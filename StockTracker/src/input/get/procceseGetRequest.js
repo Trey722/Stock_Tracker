@@ -31,18 +31,21 @@ function excuteGetRequest(command)
     return failedToExcute("Missing stock")
   }
 
-  else if (command[1] == 'OPTION')
+  else if (command[1] === 'OPTION')
   {
     return excuteGetOption(command)
   }
 
-  else if (command[1] == "ECON")
+  else if (command[1] === "ECON")
   {
-        let outputData = getEcon(command)
+    console.log("Received ECON")
+        let outputData = getEcon(command);
         if (outputData === 'failed to read')
         {
             return failedToRead(command);
         }
+
+        return outputData
   }
 
   else {return failedToRead(command)}

@@ -1,5 +1,7 @@
 import excuteGetRequest from "./get/procceseGetRequest"
 import failedToRead from "./errorFunction";
+import CalcProccese from "./calc/procceseCalc"
+
 
 function procceseCommands(command)
 {
@@ -14,6 +16,11 @@ function procceseCommands(command)
       console.log("We received command", command);
       return excuteGetRequest(parsaedCommand);
       
+    }
+
+    else if (parsaedCommand[0] == "--calculate")
+    {
+      return CalcProccese(parsaedCommand)
     }
 
     else if (parsaedCommand == "--help")
