@@ -1,6 +1,9 @@
+import React, { useState, useEffect } from 'react';
+
 async function get_greeks(ticker) {
     let api_base = 'https://yfapi123-2f8bcb77d958.herokuapp.com';
     let apiLink = `${api_base}/OPTIONS/DATA/${ticker}/Greeks`;
+    console.log(apiLink);
 
     try {
         let response = await fetch(apiLink);
@@ -19,6 +22,8 @@ async function get_greeks(ticker) {
 
 async function processGreeksData(data) {
     // Process the data or perform additional actions
+    data = JSON.parse(data)
+    console.log(data)
     return data;
 }
 
@@ -33,21 +38,34 @@ async function fetchData(ticker) {
     }
 }
 
-async function getGreeks() {
-    try {
-        let data = await fetchData('AAPL240112C00060000');
-        const jsonData = JSON.parse(data);
+function StockGreeksComponent({ stock }) {
+    const [greeks, setGreeks] = useState(null);
 
-        // Access the values of Delta and Gamma
-        const delta = jsonData.Delta;
-        const gamma = jsonData.Gamma;
-        return (<>
-           <p>Delta={delta}</p>
-           <p>Gamme={gamma}</p>
-        </>)
-    } catch (error) {
-        
-        return(<p>An error occured while trying to pull greeks</p>)
-    }
+    useEffect(() => {
+        fetchData(stock)
+            .then(greeksData => {
+                setGreeks(greeksData);
+            });
+    }, [stock]);
+
+    return (
+        <div>
+            {greeks !== null ? (
+                <>
+                    <p>Delta = {greeks.Delta}</p>
+                    <p>Gamma = {greeks.Gamma}</p>
+                </>
+            ) : (
+                <p>Loading Greeks...</p>
+            )}
+        </div>
+    );
 }
+
+export default StockGreeksComponent;
+
+
+
+
+
 

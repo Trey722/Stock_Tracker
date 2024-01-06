@@ -1,65 +1,75 @@
 import React, { useState, useRef } from 'react';
 import StockPriceComponent from './getStockInfo';
 import OptionsChainComponent from './getOptionInfo';
+import RiskFreeComponent from './getRiskFreeRate';
+import OptionsProfitAtEachPrice from './calcOptions';
+import getGreeks from './getOptionGreeks';
+import StockGreeksComponent from './getOptionGreeks';
 
 
-
-function parseCommand(command) {
-  console.log("The parsers was called");
-    const regex = /--([^']+) ([^']+) ([^']+)/;
-    const match = command.match(regex);
-
-    if (match) {
-        const new_command = match[1];
-        const type = match[2];
-        const target = match[3];
-        
-        return { new_command, type, target };
-    }
-
-    console.log("An error with mathcing")
-    return null; 
+function parseCommand(string)
+{
+    let arrayString = string.split(' ')
+    console.log(arrayString);
+    return arrayString
 }
 
-function parseCommandDates(command) {
-  console.log("The parsers was called");
-    const regex = /--([^']+) ([^']+) ([^']+) ([^']+)/;
-    const match = command.match(regex);
-
-    if (match) {
-        const new_command = match[1];
-        const type = match[2];
-        const target = match[3];
-        const date = match[4]; 
-
-        return { new_command, type, target, date};
+function excuteGetOption(command)
+{
+  if (command[2] === 'CHAIN')
+  {
+    if (command[3] && command[4])
+    {
+      return <OptionsChainComponent stock={command[3]} expiration_date={command[4]}/>
     }
-    return null; 
+  }
+
+  else if (command[2] === 'GREEKS')
+  {
+    console.log(command[3])
+    console.log("Attempting to get option greeks for", command[3])
+    return <StockGreeksComponent stock={command[3]}/>
+  }
+
+  else {
+    return failedToExcute("Missing date")
+  }
 }
+
+
 
 function excuteGetRequest(command)
 {
-    if (command['type'].includes("STOCK"))
+  console.log(command[1]);
+  if (command[1] == 'STOCK')
+  {
+    if (command[2])
     {
-     
-        return <StockPriceComponent stock={command['target']}/>
+      console.log("Tried to get STOCK for", command[2]); 
+    
+      return <StockPriceComponent stock={command[2]}/>
     }
 
-    else if (command['type'].includes("OPTION"))
-    {
-      console.log("Option was requetsed");
-      return <OptionsChainComponent stock={command['target']} expiration_date={command['date']} />
-    }
+    return failedToExcute("Missing stock")
+  }
 
-    else if (command['type'].includes("ECON"))
-    {
-      
-    }
+  else if (command[1] == 'OPTION')
+  {
+    return excuteGetOption(command)
+  }
 
-    else {
-        return failedToRead(command); 
+  else if (command[1] == "ECON")
+  {
+    if (command[2] == 'risk_free_rate') return <RiskFreeComponent/>
+    else 
+    {
+      return failedToRead(command)
     }
+  }
+
+  else {return failedToRead(command)}
 }
+
 
 
 
@@ -73,6 +83,17 @@ function failedToRead(command)
         </div>
       );
 
+}
+
+function failedToExcute(error)
+{
+  return (
+  <div>
+          <p className="error"> Failed Excution: {error}</p>
+          <p>Type -help for help.</p>
+          
+        </div>
+    )
 }
 
 
@@ -97,33 +118,27 @@ const Terminal = () => {
   const processInput = (command) => {
     let outputContent;
     let parsaedCommand
+
   
     parsaedCommand = parseCommand(command);
+
+
     
-    console.log(parsaedCommand['new_command'].length > 3);
-  
-    if (parsaedCommand === null || (parsaedCommand['new_command'].includes('get') && parsaedCommand['new_command'].length > 3) === true)
+    if (parsaedCommand[0] == "--get")
     {
-      parsaedCommand = parseCommandDates(command); 
-    }
-    
-   console.log(parsaedCommand);
-    
-    
-    
-    if (parsaedCommand == null)
-    {
-        outputContent = failedToRead(command)
+      console.log("Excuting get request")
+      console.log("We received command", command);
+      outputContent = excuteGetRequest(parsaedCommand);
+      
     }
 
-    else if (parsaedCommand['new_command'].includes('get'))
+    else if (parsaedCommand == "--help")
     {
-      
-        outputContent = excuteGetRequest(parsaedCommand); 
+      //return help stuff
     }
 
     else {
-        
+        console.log("Emergncy Else excuted")
       outputContent = failedToRead(command)
     }
 
