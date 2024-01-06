@@ -1,0 +1,13 @@
+
+
+
+function getEcon(command)
+{
+    if (command[2] == 'risk_free_rate') return <RiskFreeComponent/>
+    else 
+    {
+      return 'failed to read'
+    }
+}
+
+export default getEcon
