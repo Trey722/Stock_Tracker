@@ -3,105 +3,73 @@ import StockPriceComponent from './getStockInfo';
 import OptionsChainComponent from './getOptionInfo';
 import RiskFreeComponent from './getRiskFreeRate';
 import OptionsProfitAtEachPrice from './calcOptions';
+import getGreeks from './getOptionGreeks';
+import StockGreeksComponent from './getOptionGreeks';
 
 
+function parseCommand(string)
+{
+    let arrayString = string.split(' ')
+    console.log(arrayString);
+    return arrayString
+}
 
-function parseCommand(command) {
-  console.log("The parsers was called");
-    const regex = /--([^']+) ([^']+) ([^']+)/;
-    const match = command.match(regex);
-
-    if (match) {
-        const new_command = match[1];
-        const type = match[2];
-        const target = match[3];
-        
-        return { new_command, type, target };
+function excuteGetOption(command)
+{
+  if (command[2] === 'CHAIN')
+  {
+    if (command[3] && command[4])
+    {
+      return <OptionsChainComponent stock={command[3]} expiration_date={command[4]}/>
     }
-
-    console.log("An error with mathcing")
-    return null; 
-}
-
-function parseCommandDates(command) {
-  console.log("The parsers was called");
-    const regex = /--([^']+) ([^']+) ([^']+) ([^']+)/;
-    const match = command.match(regex);
-
-    if (match) {
-        const new_command = match[1];
-        const type = match[2];
-        const target = match[3];
-        const date = match[4]; 
-
-        return { new_command, type, target, date};
-    }
-    return null; 
-}
-
-function executeCalcCommand(command) {
-  let newCommand = parseCalcOptions(command);
-  const { buying, ticker, start, end, step } = newCommand;
-
-  return (
-      <OptionsProfitAtEachPrice
-          buying={buying}
-          ticker={ticker}
-          startPrice={start}
-          endPrice={end}
-          step={step}
-      />
-  );
-}
-
-function parseCalcOptions(command) {
-  console.log("The parsers was called");
-  const regex = /--([^']+) --([^']+) ([^']+) ([^']+) ([^']+) ([^']+)/;
-  const match = command.match(regex);
-
-  if (match) {
-      const command = match[1];
-      const buying = match[2];
-      const ticker = match[3];
-      const start = match[4];
-      const end = match[5];
-      const step = match[6]; // Changed the index from 56 to 6
-
-      return { buying, ticker, start, end, step };
   }
-  return null;
+
+  else if (command[2] === 'GREEKS')
+  {
+    console.log(command[3])
+    console.log("Attempting to get option greeks for", command[3])
+    return <StockGreeksComponent stock={command[3]}/>
+  }
+
+  else {
+    return failedToExcute("Missing date")
+  }
 }
+
+
 
 function excuteGetRequest(command)
 {
-    if (command['type'].includes("STOCK"))
+  console.log(command[1]);
+  if (command[1] == 'STOCK')
+  {
+    if (command[2])
     {
-     
-        return <StockPriceComponent stock={command['target']}/>
+      console.log("Tried to get STOCK for", command[2]); 
+    
+      return <StockPriceComponent stock={command[2]}/>
     }
 
-    else if (command['type'].includes("OPTION"))
+    return failedToExcute("Missing stock")
+  }
+
+  else if (command[1] == 'OPTION')
+  {
+    return excuteGetOption(command)
+  }
+
+  else if (command[1] == "ECON")
+  {
+    if (command[2] == 'risk_free_rate') return <RiskFreeComponent/>
+    else 
     {
-      console.log("Option was requetsed");
-      return <OptionsChainComponent stock={command['target']} expiration_date={command['date']} />
+      return failedToRead(command)
     }
+  }
 
-    else if (command['type'].includes("ECON"))
-    {
-      if(command['target'].includes("risk_free_rate"))
-      {
-        return <RiskFreeComponent />
-      }
-
-      else {
-        return failedToRead(command);
-      }
-    }
-
-    else {
-        return failedToRead(command); 
-    }
+  else {return failedToRead(command)}
 }
+
 
 
 
@@ -115,6 +83,17 @@ function failedToRead(command)
         </div>
       );
 
+}
+
+function failedToExcute(error)
+{
+  return (
+  <div>
+          <p className="error"> Failed Excution: {error}</p>
+          <p>Type -help for help.</p>
+          
+        </div>
+    )
 }
 
 
@@ -142,31 +121,24 @@ const Terminal = () => {
 
   
     parsaedCommand = parseCommand(command);
+
+
     
-    console.log(parsaedCommand['new_command'].length > 3);
-  
-    if (parsaedCommand === null || (parsaedCommand['new_command'].includes('get') && parsaedCommand['new_command'].length > 3) === true)
+    if (parsaedCommand[0] == "--get")
     {
-      parsaedCommand = parseCommandDates(command); 
-    }
-    
-   console.log(parsaedCommand);
-    
-    
-    
-    if (parsaedCommand == null)
-    {
-        outputContent = failedToRead(command)
+      console.log("Excuting get request")
+      console.log("We received command", command);
+      outputContent = excuteGetRequest(parsaedCommand);
+      
     }
 
-    else if (parsaedCommand['new_command'].includes('get'))
+    else if (parsaedCommand == "--help")
     {
-      
-        outputContent = excuteGetRequest(parsaedCommand); 
+      //return help stuff
     }
 
     else {
-        
+        console.log("Emergncy Else excuted")
       outputContent = failedToRead(command)
     }
 
