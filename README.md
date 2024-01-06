@@ -91,8 +91,10 @@ To obtain the risk-free interest rate (10-year Treasury yield), use:
 To use the various calculators, use the following commands:
 - Expected Option Calculator:
   ```bash
-  --calculator EXPECTED OPTION
+  --calculate OPTION PNL AAPL240112C00060000 180 200 5
   ```
+
+This calculator will use a starting price + end price and a step to measure profit or loss at every step. 
 
 - Delta + Gamma Hedge Calculator:
   ```bash
