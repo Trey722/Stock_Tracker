@@ -29,7 +29,7 @@ Provides access to economic data from the Federal Reserve.
 
 **Usage:**
 ```bash
---get ECON risk_free_interest
+--get ECON risk_free_rate
 ```
 This command fetches the risk-free interest rate, often represented by the 10-year Treasury yield.
 
