@@ -44,6 +44,11 @@ Both a date and ticker are required
 
 This will get delta and gamma for the option with a ticker of AAPL240112C00060000.
 
+Delta = An estimated measure of how much a $1 move in share price will effect the value of an option. 
+Gamma = The rate of change of delta as the share price moves. 
+
+These can be sumarised as your exposure to small movemments aka delta or large movements gamma. 
+
 # Get risk_free_rate 
 ```bash
 --get ECON risk_free_rate
@@ -61,7 +66,7 @@ This willl get the US GDP from 2024
   --calculate OPTION PNL AAPL240112C00060000 180 200 5
 ```
 
-This takes a option_ticker + starting price + ending price + step and calcuates the profits between the two ranges using the step. It is reccoemmende to keep step abouve 1 for speed
+This takes a option_ticker + starting price + ending price + step and calcuates the profits between the two ranges using the step. It is reccoemmende to keep step abouve 1 for server purposes. 
 
 #### 2.2 Delta + Gamma Hedge Calculator
 Assists users in calculating delta and gamma for hedging purposes.
@@ -71,6 +76,8 @@ Assists users in calculating delta and gamma for hedging purposes.
 ```
 This will use the quantity and option 1 or the option you are writing + the option you are using to cancel. It will take these two numbers and callaucte the amount of option 2
 you need to buy or sell short + stocks you need to buy or sell to nuetrilze your gamma + delta. 
+
+Gamma and Delta hedging is used largely by market makers, so they can profit off of the bid ask spread and can keept a net nutrual positon. 
 
 ```bash
 --calculate OPTION HEDGE -10000 0.550 0.04400 0.270 0.03650
