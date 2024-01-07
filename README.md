@@ -1,6 +1,5 @@
 # Web-Based Stock Tracker
 
-#link 
 https://trey722.github.io/Stock_Tracker/
 
 ## Overview
