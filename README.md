@@ -1,5 +1,8 @@
 # Web-Based Stock Tracker
 
+#link 
+https://trey722.github.io/Stock_Tracker/
+
 ## Overview
 This web-based stock tracker provides users with various features to gather and analyze financial data, including stock prices, options chains, and economic indicators from the Federal Reserve.
 
@@ -11,7 +14,6 @@ This web-based stock tracker provides users with various features to gather and 
   1.1 Pull Stock Data
   1.2 Pull Options Chain
   1.3 Pull Treausry Yeilds 
-  1.4 Pull GDP 
 
 ### 2. Calculate 
   2.1 Calculate Options Profit of Calls and Puts
@@ -49,11 +51,6 @@ This will get delta and gamma for the option with a ticker of AAPL240112C0006000
 ```
 
 This command fetches the risk-free interest rate, often represented by the 10-year Treasury yield.
-
-# Get US GDP
-```bash
---get ECON GDP 2024
-```
 
 This willl get the US GDP from 2024 
 
