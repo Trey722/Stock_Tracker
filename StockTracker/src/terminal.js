@@ -1,16 +1,6 @@
 import React, { useState, useRef } from 'react';
 import procceseCommands from "./input/paraseCommands"
 
-
-
-
-
-
-
-
-
-
-
 const Terminal = () => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState([]);

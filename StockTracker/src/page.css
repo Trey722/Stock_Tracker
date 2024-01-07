@@ -47,5 +47,14 @@ p {
 }
 
 
+#helpCommand
+{
+  font-size: 15px;
+}
 
+#helpDescription
+{
+  font-size: 15px;
+  margin-left: 50px;
+}
 

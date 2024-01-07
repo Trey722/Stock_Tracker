@@ -75,7 +75,7 @@ function OptionsProfitAtEachPrice({ ticker, startPrice, endPrice, stepAmount }) 
                     </tbody>
                 </table>
             )}
-            <p>NOTE: These calculations do not include permium that were paid</p>
+            <p>NOTE: These calculations do not include brokerage commisions, regualtor feees, bid/ask spread, and/or other expenses that may have been invovled</p>
         </div>
     );
 }
