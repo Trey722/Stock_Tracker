@@ -15,24 +15,35 @@ function failedToExcute(error)
 
 function excuteGetOption(command)
 {
+  console.log("Excuting Options command")
   if (command[2] === 'CHAIN')
   {
-    if (command[3] && command[4])
-    {
-      return <OptionsChainComponent stock={command[3]} expiration_date={command[4]}/>
+      if (command[3])
+      {
+       console.log("We got the date")
+        if (command[4])
+        {
+          return <OptionsChainComponent stock={command[3]} expiration_date={command[4]}/>
+        }
+
+        else 
+        {
+          return <p id='megative'>Error: Missing expiration_date</p>
+        }
+
     }
   }
 
   else if (command[2] === 'GREEKS')
-  {
-    console.log(command[3])
-    console.log("Attempting to get option greeks for", command[3])
-    return <StockGreeksComponent stock={command[3]}/>
-  }
+    {
+      console.log(command[3])
+      console.log("Attempting to get option greeks for", command[3])
+      return <StockGreeksComponent stock={command[3]}/>
+    }
 
-  else {
-    return failedToExcute("Missing date")
-  }
+    else {
+      return failedToExcute("Missing date")
+    }
 }
 
 export default excuteGetOption;
